@@ -7,7 +7,7 @@ postMessage, putMessage, deleteMessage } = require('../controllers/messages')
 
 router.get('/', rootMessage) //End point
 
-router.get('/hi', hiMessage) //End point
+router.get('/hi/:name/:edad', hiMessage) //End point
 
 router.get('/bye', byeMessage) //End point
 
