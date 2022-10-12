@@ -28,7 +28,7 @@ const byeMessage = (req = request, res = response) => {
 }
 
 const postMessage = (req = request, res = response) => {
-    const {no_control, nombre } = req.body
+    const{no_control, nombre} = req.body
     //console.log({no_control,nombre})
     res.json({msg: `Numero de control: ${no_control}, nombre: ${nombre}`})
 }
