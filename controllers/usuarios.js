@@ -79,51 +79,72 @@ const deleteUserByID = async (req = request, res = response) =>{
 
 
 const addUser = async (req = request, res = response) => {
-    const {Nombre, Apellidos, Edad, Genero, Usuario, Contrasena, Fecha_Nacimiento, Activo} = req.body//URI params
+    const {
+        Nombre,
+        Apellidos, 
+        Edad, 
+        Genero, 
+        Usuario, 
+        Contrasena, 
+        Fecha_Nacimiento, 
+        Activo
+    } = req.body//URI params
 
-    if(!Nombre || !Apellidos || !Edad || !Genero || !Usuario || !Contrasena || !Activo){
+    if(
+        !Nombre || 
+        !Apellidos || 
+        !Edad ||
+        !Usuario || 
+        !Contrasena || 
+        !Activo)
+        
+        {
         res.status(400).json({msg: "Faltan Datos"})
         return
     }
+    
     let conn;
 
     try {
-
-        conn = await pool.getConnection()//Realizamos la conexión
-        const [userExit]=await conn.query(`SELECT Usuario FROM Usuarios WHERE Usuario = '${Usuario}'`)
         
-        if (userExit) {
-            res.status(400).json({msg: `Los Usuarios '${Usuario} ya se encuentra registrado`})
+        conn = await pool.getConnection()//Realizamos la conexión
+        
+         //generamos la consulta
+        const [userExist] = await conn.query(`SELECT Usuario FROM Usuarios WHERE Usuario = '${Usuario}'`)
+        
+        if(userExist){
+            res.status(400).json({msg: `El usuario '${Usuario}' ya se encuentra registrado`})
             return
         }
 
                     //generamos la consulta
-                    const result = await conn.query(`INSERT INTO Usuario(
+                    const result = await conn.query(`INSERT INTO Usuarios(
                         Nombre, 
                         Apellidos, 
                         Edad, 
                         Genero, 
                         Usuario, 
                         Contrasena, 
-                        Fecha_Nacimiento, 
-                        Activo) VALUES (
-                            '${Nombre}', 
+                        Fecha_Nacimiento, Active) VALUES (
+                        '${Nombre}', 
                         '${Apellidos}', 
-                        ${Edad}, 
+                         ${Edad}, 
                         '${Genero}', 
                         '${Usuario}', 
                         '${Contrasena}', 
                         '${Fecha_Nacimiento}', 
-                        '${Activo}')`, (error) => {if(error) throw error})
+                        '${Activo}'
+                        )`, (error) => {if(error) throw error})
 
-                    if (result.affectedRows === 0) {//En caso de no haber resgistros lo informamos
-                    res.status(404).json({msg: `No se pudo agregar el usuario`})
-                    return
-                    }
-                    res.json({msg:`Se agregó satisfactoriamente el usuario`})
-                    //Se manda la lista de usuarios
-                }
-    catch (error){
+        if (result.affectedRows === 0) {   //En caso de no haber resgistros lo informamos
+            res.status(404).json({msg: `No se pudo agregar el usuarios con el Nombre ${Nombre}`})
+            return
+        }
+                    
+            res.json({msg:`Se agregó satisfactoriamente el usuario con Nombre ${Nombre}`}) //Se manda la lista de usuarios
+        }
+   
+        catch (error) {
         console.log(error)
         res.status(500).json({msg: error})//informamos el error
     }
