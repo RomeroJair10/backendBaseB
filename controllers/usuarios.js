@@ -1,4 +1,5 @@
 const{reques, response, request} = require("express")
+const bcryptjs = require("bcryptjs")
 const pool = require("../db/connection")
 
 const getUsers = async (req = reques, res = response) => {
@@ -102,6 +103,9 @@ const addUser = async (req = request, res = response) => {
         res.status(400).json({msg: "Faltan Datos"})
         return
     }
+
+    const salt = bcryptjs.genSaltSync()
+    const contrasenaCifrada = bcryptjs.hashSync(Contrasena, salt)
     
     let conn;
 
@@ -131,7 +135,7 @@ const addUser = async (req = request, res = response) => {
                          ${Edad}, 
                         '${Genero}', 
                         '${Usuario}', 
-                        '${Contrasena}', 
+                        '${contrasenaCifrada}', 
                         '${Fecha_Nacimiento}', 
                         '${Activo}'
                         )`, (error) => {if(error) throw error})
