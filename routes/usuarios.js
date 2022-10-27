@@ -1,5 +1,6 @@
 const{Router} = require("express")
-const { getUsers, getUserByID, deleteUserByID, addUser, updateUserByUsuario} = require("../controllers/usuarios")
+const { getUsers, getUserByID, deleteUserByID, addUser, updateUserByUsuario, signIN, cambiocon} 
+= require("../controllers/usuarios")
 
 const router = Router()
 
@@ -12,6 +13,8 @@ router.get("/id/:id", getUserByID)
 
 ///POST///
 router.post("/", addUser)
+router.post("/signin", signIN)
+router.post("/signin/cambiocon", cambiocon)
 
 ///PATCH///
 router.put("/", updateUserByUsuario)
