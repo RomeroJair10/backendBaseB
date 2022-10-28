@@ -160,6 +160,7 @@ const addUser = async (req = request, res = response) => {
 
 }
 
+
 const updateUserByUsuario = async (req = request, res = response) => {
     const {Nombre, 
            Apellidos, 
@@ -221,6 +222,7 @@ const updateUserByUsuario = async (req = request, res = response) => {
 
 }
 
+
 const signIN = async (req = request, res = response) =>{
     const {Usuario, Contrasena} = req.body //URI params
 
@@ -261,6 +263,7 @@ const signIN = async (req = request, res = response) =>{
     }
 }
 
+
 const cambiocon = async (req = request, res = response) =>{
     const {Usuario, Contrasena, nuevaContrasena} = req.body
 
@@ -276,6 +279,12 @@ const cambiocon = async (req = request, res = response) =>{
         //generamos la consulta
         const [getPass] = await conn.query(`SELECT Contrasena FROM Usuarios WHERE Usuario = '${Usuario}'`,
          (error) => {if (error) throw error})
+
+         if(!getPass){
+            res.status(403).json({msg: "El usuario es invalido"})
+            return
+         }
+         
          const contrasenavalida = bcryptjs.compareSync(Contrasena, getPass.Contrasena)
          const salt = bcryptjs.genSaltSync()
          const contrasenaCifrada = bcryptjs.hashSync(nuevaContrasena, salt)
@@ -287,7 +296,8 @@ const cambiocon = async (req = request, res = response) =>{
          const updatepass = await conn.query(`UPDATE Usuarios SET Contrasena = '${contrasenaCifrada}' 
          WHERE Usuario = '${Usuario}'`,(error) => {if (error) throw error})
         res.json({msg:`Se a actualizado la nueva contraseña.`})
-    }catch (error){
+    }
+    catch (error){
 
         console.log(error)
         res.status(500).json({msg: error}) 
@@ -298,5 +308,6 @@ const cambiocon = async (req = request, res = response) =>{
 
 
 }
+
 
 module.exports = {getUsers, getUserByID, deleteUserByID, addUser, updateUserByUsuario, signIN, cambiocon}
