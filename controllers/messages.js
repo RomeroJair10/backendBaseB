@@ -1,17 +1,17 @@
 const { request, response } = require("express")
-//Query Params
+
 const rootMessage = (req = request, res = response) => {
     const{nombre, apellido_paterno} = req.query
     //console.log(nombre)
     if(!nombre){
         res.status(400).json({msg: "Falta indicar el nombre"})
         return
-}
+               }
 
 if(!apellido_paterno){
     res.status(400).json({msg: "Falta indicar el apellido paterno"})
     return
-}
+                     }
 
 res.status(404).json({msg: 'MI nombre es ' +nombre+' '+apellido_paterno})
 
